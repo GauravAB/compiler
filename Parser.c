@@ -147,31 +147,41 @@ inline bool match_token(TokenKind kind)
 	}
 }
 
+size_t copy_token_kind_name(char* dest , size_t dest_size, TokenKind kind)
+{
+	size_t n = 0;
+
+	switch (kind)
+	{
+	case TOKEN_INT:
+		n = snprintf(dest,dest_size, "integer");
+		break;
+	case TOKEN_IDENTIFIER:
+		n = snprintf(dest,dest_size, "identifier");
+		break;
+	default:
+		if (kind < 128 && isprint(kind))
+		{
+			n = snprintf(dest,dest_size, "%c", kind);
+		}
+		else
+		{
+			n = snprintf(dest,dest_size, "<ASCII %c", kind);
+		}
+		break;
+	}
+
+	return n;
+}
+
 //CAUTION: This returns pointer to a static internal buffer
 const char* token_kind_name(TokenKind kind)
 {
 	static char buf[256];
 
-	switch (kind)
-	{
-	case TOKEN_INT:
-		sprintf(buf, "integer");
-		break;
-	case TOKEN_IDENTIFIER:
-		sprintf(buf, "identifier");
-		break;
-	default:
-		if (kind < 128 && isprint(kind))
-		{
-			sprintf(buf, "%c", kind);
+	size_t n = copy_token_kind_name(buf, sizeof(buf), kind);
+	assert(n + 1 <= sizeof(buf));
 
-		}
-		else
-		{
-			sprintf(buf, "<ASCII %c", kind);
-		}
-		break;
-	}
 	return buf;
 }
 

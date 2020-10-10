@@ -8,7 +8,7 @@ void parse_test();
 
 
 //globals
-InternStr* interns = NULL;
+Intern* interns = NULL;
 Token token;
 const char* stream;
 
@@ -52,6 +52,20 @@ void lex_test()
 		print_token(token);
 		next_token();
 	}
+
+	const char* str = "XY+(XY)_HELLOW1,234+882";
+	init_stream(str);
+	assert_token_name("XY");
+	assert_token('+');
+	assert_token('(');
+	assert_token_name("XY");
+	assert_token(')');
+	assert_token_name("_HELLOW1");
+	assert_token(',');
+	assert_token_int(234);
+	assert_token('+');
+	assert_token_int(882);
+	assert_token_eof();
 }
 
 
@@ -112,7 +126,7 @@ void parse_test()
 	TEST_EXPR(1);
 	TEST_EXPR((1));
 	TEST_EXPR(-1);
-	TEST_EXPR(1 - 2 - 3);
+	TEST_EXPR(1-2-3);
 	TEST_EXPR(2*3+4*5);
 	TEST_EXPR(2+-3);
 }

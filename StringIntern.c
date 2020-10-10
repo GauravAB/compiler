@@ -1,6 +1,6 @@
 #include "StringIntern.h"
 
-extern InternStr* interns;
+extern Intern* interns;
 
 //string interning using a string buffer in range
 const char* str_intern_range(const char* start, const char* end)
@@ -8,14 +8,15 @@ const char* str_intern_range(const char* start, const char* end)
 	size_t len = end - start;
 
 	//TODO: change the linear time to hash time
-	for (size_t i = 0; i < buf_len(interns); ++i)
+	
+	for (Intern* it = interns; it != buf_end(interns); it++)
 	{
-		//linear time compare
-		if (interns[i].len == len && (strncmp(interns[i].str, start, len) == 0))
+		if (it->len == len && strncmp(it->str, start, len) == 0)
 		{
-			return (interns[i].str);
+			return it->str;
 		}
 	}
+
 
 	//consider the null termination when interning
 	char* str = xmalloc(len + 1);
@@ -23,7 +24,7 @@ const char* str_intern_range(const char* start, const char* end)
 
 	str[len] = 0;
 
-	buf_push(interns, ((InternStr){ len, str }));
+	buf_push(interns, (Intern){ len, str });
 
 	return str;
 }

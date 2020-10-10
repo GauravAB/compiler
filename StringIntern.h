@@ -2,11 +2,11 @@
 #include "common.h"
 #include "StretchyBuffer.h"
 
-typedef struct InternStr
+typedef struct Intern
 {
 	size_t len;
 	const char* str;
-}InternStr;
+}Intern;
 
 
 const char* str_intern_range(const char* start, const char* end);
