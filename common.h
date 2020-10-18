@@ -9,6 +9,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdarg.h>
+#include <math.h>
 
 void* xmalloc(size_t num_bytes);
 

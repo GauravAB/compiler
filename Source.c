@@ -22,9 +22,10 @@ void init_stream(const char* src)
 int main(int argc, char** argv)
 {
 	buf_test();
-	lex_test();
 	str_intern_test();
-	parse_test();
+
+	lex_test();
+	
 	return 0;	
 }
 
@@ -44,15 +45,36 @@ void* xmalloc(size_t num_bytes)
 
 void lex_test()
 {
-	char* source = "XY+(XY)HELLOW123456+789ORLD";
-	init_stream(source);
 
-	while (token.kind)
-	{
-		print_token(token);
-		next_token();
-	}
+	//Integer literal tests
+	//make sure UINT_MAX does'nt trigger overflow
+	init_stream("18446744073709551615 0xffffffffffffffff 042 0b1111");
+	assert_token_int(18446744073709551615ull);
+	assert_token_int(0xffffffffffffffffull);
+	assert_token_int(042);
+	assert_token_int(0xF);
 
+
+	//float literal tests
+	init_stream("3.14 .42 3e10");
+	assert_token_float(3.14);
+	assert_token_float(.42);
+	assert_token_float(3e10);
+	assert_token_eof();
+
+	//Char literal test
+	init_stream("'a' '\\n' ");
+	assert_token_int('a');
+	assert_token_int('\n');
+	assert_token_eof();
+
+	//String literal test
+	init_stream("\"foo\" \"a\\nb\" ");
+	assert_token_str("foo");
+	assert_token_str("a\nb");
+	assert_token_eof();
+
+	//Generic tests
 	const char* str = "XY+(XY)_HELLOW1,234+882";
 	init_stream(str);
 	assert_token_name("XY");

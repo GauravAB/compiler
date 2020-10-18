@@ -6,6 +6,7 @@ void fatal(const char* fmt, ...)
 {
 	va_list args;
 	va_start(args, fmt);
+
 	printf("FATAL: ");
 	vprintf(fmt, args);
 	printf("\n");
@@ -55,7 +56,7 @@ int parse_expr2()
 {
 	if (match_token('-'))
 	{
-		return -parse_expr(2);
+		return -parse_expr2();
 	}
 	else
 	{
